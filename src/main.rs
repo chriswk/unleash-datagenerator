@@ -6,6 +6,7 @@ use reqwest::header::{HeaderMap, HeaderValue};
 use reqwest::{ClientBuilder, Url};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use ulid::Ulid;
 
 #[derive(Clone, Debug, Parser)]
 pub struct Args {
@@ -198,8 +199,8 @@ async fn main() {
     let mut rng = rand::thread_rng();
     let features = (0..args.count)
         .into_iter()
-        .map(|i| Feature {
-            name: format!("toggle_{i}"),
+        .map(|_| Feature {
+            name: Ulid::new().to_string(),
             description: None,
             feature_type: rand::random(),
             impression_data: rand::random(),
