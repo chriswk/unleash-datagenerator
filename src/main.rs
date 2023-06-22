@@ -150,6 +150,18 @@ fn strategies_url(features_url: &Url, feature_name: &str, env: &str) -> Url {
     update_url
 }
 
+fn environment_enable_url(features_url: &Url, feature_name: &str, env: &str) -> Url {
+    let mut enable_url = features_url.clone();
+    enable_url
+        .path_segments_mut()
+        .expect("Could not modify environment-enable URL")
+        .push(feature_name)
+        .push("environments")
+        .push(env)
+        .push("on");
+    enable_url
+}
+
 async fn post_data_to(
     url: String,
     api_key: String,
@@ -174,22 +186,30 @@ async fn post_data_to(
             .send()
             .await
             .expect("Failed to send feature");
-    }
-    for (feature_name, strategies) in feature_strategies {
-        let update_url = strategies_url(&feature_url, &feature_name, &environment);
+        let strategies_url = strategies_url(&feature_url, &feature.name, &environment);
+        let strategies = feature_strategies
+            .get(&feature.name)
+            .expect("Somehow lost a feature");
         println!(
             "Posting {} strategies to {}",
             strategies.len(),
-            update_url.clone()
+            strategies_url.clone()
         );
         for strategy in strategies {
             client
-                .post(update_url.clone())
+                .post(strategies_url.clone())
                 .json(&strategy)
                 .send()
                 .await
                 .expect("Failed to send strategy");
         }
+        let enable_url = environment_enable_url(&feature_url, &feature.name, &environment);
+        println!("Enabling {} environment for {}", environment, feature.name);
+        client
+            .post(enable_url)
+            .send()
+            .await
+            .expect("Failed to enable environment");
     }
 }
 
