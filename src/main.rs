@@ -19,11 +19,14 @@ pub struct Args {
     #[clap(short, long, default_value = "development")]
     pub environment: String,
 
-    #[clap(short, long, default_value_t = false)]
+    #[clap(long, default_value_t = false)]
     pub print_to_shell: bool,
 
     #[clap(short, long, env, default_value = "http://localhost:4242")]
     pub unleash_url: String,
+
+    #[clap(short, long, default_value = "default")]
+    pub project_name: String,
 
     #[clap(short, long, env)]
     pub api_key: Option<String>,
@@ -125,7 +128,7 @@ pub struct Strategy {
     pub segments: Vec<u32>,
 }
 
-fn features_url(base_url: &Url) -> Url {
+fn features_url(base_url: &Url, project_name: &String) -> Url {
     let mut feature_url = base_url.clone();
     feature_url
         .path_segments_mut()
@@ -133,7 +136,7 @@ fn features_url(base_url: &Url) -> Url {
         .push("api")
         .push("admin")
         .push("projects")
-        .push("default")
+        .push(project_name)
         .push("features");
     feature_url
 }
@@ -166,6 +169,7 @@ async fn post_data_to(
     url: String,
     api_key: String,
     environment: String,
+    project_name: String,
     features: Vec<Feature>,
     feature_strategies: HashMap<String, Vec<Strategy>>,
 ) {
@@ -177,7 +181,7 @@ async fn post_data_to(
         .build()
         .expect("Couldn't build reqwest client");
     let unleash_url = Url::parse(&url).expect("Couldn't parse unleash url");
-    let feature_url = features_url(&unleash_url);
+    let feature_url = features_url(&unleash_url, &project_name);
     println!("Posting {} features to {}", features.len(), feature_url);
     for feature in features {
         client
@@ -261,6 +265,7 @@ async fn main() {
             args.unleash_url,
             args.api_key.unwrap_or("invalidkey".into()),
             args.environment,
+            args.project_name,
             features,
             feature_to_strategies,
         )
