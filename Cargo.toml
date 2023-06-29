@@ -1,5 +1,5 @@
 [package]
-name = "datagenerator"
+name = "unleash-datagenerator"
 version = "0.1.0"
 edition = "2021"
 description = "Generates features and strategies for https://github.com/Unleash/unleash"
