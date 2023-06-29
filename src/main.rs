@@ -10,26 +10,37 @@ use ulid::Ulid;
 
 #[derive(Clone, Debug, Parser)]
 pub struct Args {
+    /// How many feature toggles should be generated
     #[clap(short, long, default_value_t = 1000)]
     pub count: u32,
 
+    /// How many strategies per feature toggle. This does mean that total datapoints will equal count * this
     #[clap(short, long, default_value_t = 10)]
     pub strategies_per_feature: u32,
 
+    /// Which environment should we create the strategies under. This environment needs to already exist
     #[clap(short, long, default_value = "development")]
     pub environment: String,
 
+    /// Don't POST feature toggles and strategies. Only output the json to stdout
     #[clap(long, default_value_t = false)]
     pub print_to_shell: bool,
 
+    /// Where is the Unleash instance you'd like to generate data for
     #[clap(short, long, env, default_value = "http://localhost:4242")]
     pub unleash_url: String,
 
+    /// Name of the project to generate features under. If you're using Unleash OSS, leave the default, it's the only project that exists
     #[clap(short, long, default_value = "default")]
     pub project_name: String,
 
+    /// Needs to be an admin API key or a service account token with access to CREATE_FEATURE, CREATE_FEATURE_STRATEGY and UPDATE_FEATURE_ENVIRONMENT permissions
     #[clap(short, long, env)]
     pub api_key: Option<String>,
+
+    /// Generate clap help file in markdown format and exit
+    #[clap(short, long, default_value_t = false)]
+    pub markdown: bool,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
@@ -220,6 +231,10 @@ async fn post_data_to(
 #[tokio::main]
 async fn main() {
     let args = Args::parse();
+    if args.markdown {
+        clap_markdown::print_help_markdown::<Args>();
+        return ();
+    }
     let mut rng = rand::thread_rng();
     let features = (0..args.count)
         .into_iter()
