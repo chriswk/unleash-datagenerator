@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v0.1.0 (2023-06-29)
 
+### Chore
+
+ - <csr-id-6a12b5d2bf065bf2b4c4445ca3e89030c4a97ae6/> Added changelog
+
 ### Bug Fixes
 
  - <csr-id-2cee43fc0b53ae26c27ce4cffe673b4592c4a873/> Updated name to be unleash-datagenerator
@@ -15,8 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 6 commits contributed to the release over the course of 6 calendar days.
- - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 7 commits contributed to the release over the course of 6 calendar days.
+ - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
 ### Commit Details
@@ -26,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Added changelog ([`6a12b5d`](https://github.com/chriswk/unleash-datagenerator/commit/6a12b5d2bf065bf2b4c4445ca3e89030c4a97ae6))
     - Updated readme for CLI args ([`247acb8`](https://github.com/chriswk/unleash-datagenerator/commit/247acb82909a451bad25a703e0e83a01c4aeb323))
     - Updated name to be unleash-datagenerator ([`2cee43f`](https://github.com/chriswk/unleash-datagenerator/commit/2cee43fc0b53ae26c27ce4cffe673b4592c4a873))
     - Prepare for release ([`95c0beb`](https://github.com/chriswk/unleash-datagenerator/commit/95c0bebce1d26c4a69706b3dd4670124b0660145))
