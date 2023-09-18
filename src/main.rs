@@ -137,6 +137,7 @@ pub struct Strategy {
     pub constraints: Vec<Constraint>,
     pub parameters: HashMap<String, String>,
     pub segments: Vec<u32>,
+    pub variants: Vec<String>,
 }
 
 fn features_url(base_url: &Url, project_name: &String) -> Url {
@@ -233,11 +234,10 @@ async fn main() {
     let args = Args::parse();
     if args.markdown {
         clap_markdown::print_help_markdown::<Args>();
-        return ();
+        return ;
     }
     let mut rng = rand::thread_rng();
     let features = (0..args.count)
-        .into_iter()
         .map(|_| Feature {
             name: Ulid::new().to_string(),
             description: None,
@@ -249,7 +249,6 @@ async fn main() {
         .iter()
         .map(|f| {
             let strategies = (0..args.strategies_per_feature)
-                .into_iter()
                 .map(|s| {
                     let title = format!("strategy_{}_{}", f.name.clone(), s);
                     let mut parameters = HashMap::new();
@@ -258,13 +257,14 @@ async fn main() {
                     parameters.insert("stickiness".into(), "default".into());
                     parameters.insert("groupId".into(), f.name.clone());
                     Strategy {
-                        name: "gradualRollout".into(),
-                        title: title.clone(),
+                        name: "flexibleRollout".into(),
+                        title,
                         disabled: false,
                         sort_order: rng.gen_range(1..100000),
                         constraints: vec![],
                         parameters,
                         segments: vec![],
+                        variants: vec![],
                     }
                 })
                 .collect::<Vec<Strategy>>();
